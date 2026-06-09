@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2025暑假集训费用计算器 · 毅搏足球</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;background:#f3f4f6;min-height:100vh;padding:16px 0 40px}
+.wrap{padding:0 16px 2rem;max-width:700px;margin:0 auto}
+
+/* header */
+.hd{background:#fff;border:0.5px solid #e5e7eb;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.hd-top{display:flex;align-items:center;gap:10px;margin-bottom:.5rem}
+.hd-top i{font-size:20px;color:#6b7280}
+.hd-title{font-size:16px;font-weight:500;color:#111827}
+.hd-meta{display:flex;gap:1.5rem;flex-wrap:wrap}
+.hd-item{font-size:13px;color:#6b7280}
+.hd-item b{color:#111827;font-weight:500}
+
+.sec-label{font-size:12px;font-weight:500;color:#6b7280;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+
+/* 选择按钮 */
+.sel-group{display:flex;gap:8px;margin-bottom:1.25rem}
+.sel-btn{flex:1;padding:14px 10px;border-radius:8px;cursor:pointer;text-align:center;transition:all .15s;position:relative;font-family:inherit}
+
+/* config card */
+.config-card{background:#fff;border:0.5px solid #e5e7eb;border-radius:12px;padding:.875rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-direction:column;gap:.875rem}
+.config-block-label{font-size:12px;color:#6b7280;margin-bottom:8px}
+.divider{height:0.5px;background:#e5e7eb}
+.parent-meal-bar{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.pm-left{display:flex;align-items:center;gap:10px}
+.pm-left i{font-size:18px;color:#6b7280}
+.pm-text{font-size:13px;color:#111827;font-weight:500}
+.pm-sub{font-size:11px;color:#6b7280;margin-top:2px}
+.tog{width:36px;height:20px;border-radius:10px;background:#d1d5db;position:relative;transition:background .15s;flex-shrink:0;cursor:pointer}
+.tog.on{background:#185FA5}
+.tog::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:left .15s}
+.tog.on::after{left:18px}
+
+/* legend */
+.legend-row{display:flex;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:#6b7280}
+.leg-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+
+/* calendar */
+.cal-wrap{border:0.5px solid #e5e7eb;border-radius:12px;overflow:hidden;margin-bottom:.875rem}
+.cal-header{display:grid;border-bottom:0.5px solid #e5e7eb;background:#f9fafb}
+.cal-hcell{padding:7px 3px;font-size:11px;color:#6b7280;text-align:center;border-right:0.5px solid #e5e7eb;line-height:1.35}
+.cal-hcell:last-child{border-right:none}
+.cal-hcell.dc{text-align:left;padding-left:8px}
+.cal-row{display:grid;border-bottom:0.5px solid #e5e7eb;background:#fff}
+.cal-row:last-child{border-bottom:none}
+.cal-row.wknd{background:#f9fafb}
+.date-cell{padding:6px 4px 6px 8px;border-right:0.5px solid #e5e7eb;display:flex;flex-direction:column;justify-content:center}
+.dn{font-size:14px;font-weight:500;color:#111827;line-height:1}
+.dw{font-size:10px;color:#6b7280;margin-top:2px}
+.dnote{font-size:10px;color:#6b7280;margin-top:2px;line-height:1.3}
+.cc{border-right:0.5px solid #e5e7eb;display:flex;align-items:center;justify-content:center;padding:4px 2px}
+.cc:last-child{border-right:none}
+.cc.na{background:#f9fafb}
+.chk{appearance:none;-webkit-appearance:none;width:21px;height:21px;border:0.5px solid #d1d5db;border-radius:5px;background:#fff;cursor:pointer;position:relative;flex-shrink:0;transition:border-color .1s,background .1s}
+.chk.na{opacity:.25;pointer-events:none;background:#f3f4f6}
+.chk:not(.na):hover{border-color:#9ca3af}
+.chk:checked{border-color:transparent}
+.chk.am:checked{background:#185FA5}
+.chk.pm:checked{background:#3B6D11}
+.chk.stay:checked{background:#534AB7}
+.chk.lunch:checked{background:#BA7517}
+.chk.dinner:checked{background:#993556}
+.chk.plunch:checked{background:#d4891a}
+.chk.pdinner:checked{background:#c0456e}
+.chk:checked::before{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:500;line-height:1}
+
+/* action buttons */
+.act-row{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.act-btn{padding:6px 13px;border:0.5px solid #d1d5db;border-radius:8px;background:#fff;cursor:pointer;font-size:12px;color:#6b7280;font-family:inherit}
+.act-btn:hover{background:#f3f4f6}
+
+/* summary */
+.summary-card{border:0.5px solid #e5e7eb;border-radius:12px;background:#fff;overflow:hidden}
+.sum-sec{padding:.875rem 1.25rem;border-bottom:0.5px solid #e5e7eb}
+.sum-sec:last-child{border-bottom:none}
+.detail-row{display:flex;align-items:flex-start;gap:12px;padding:.625rem 0;border-bottom:0.5px solid #e5e7eb}
+.detail-row:last-child{border-bottom:none}
+.detail-left{flex:1;min-width:0}
+.detail-title{font-size:13px;font-weight:500;color:#111827;margin-bottom:3px}
+.detail-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;margin-top:3px}
+.tag-full{background:#d1fae5;color:#065f46}
+.tag-partial{background:#fef3c7;color:#92400e}
+.detail-dates{font-size:11px;color:#6b7280;margin-top:4px;line-height:1.6}
+.detail-right{text-align:right;flex-shrink:0}
+.detail-count{font-size:12px;color:#6b7280}
+.detail-fee{font-size:16px;font-weight:500;color:#111827;margin-top:2px}
+.coach-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.coach-left{display:flex;align-items:center;gap:8px;font-size:13px;color:#6b7280}
+.coach-amt{font-size:14px;font-weight:500;color:#111827}
+.total-bar{display:flex;align-items:baseline;justify-content:space-between;padding:1.125rem 1.25rem;background:#f9fafb}
+.total-label{font-size:14px;color:#6b7280}
+.total-amt{font-size:32px;font-weight:500;color:#111827}
+.cny{font-size:17px;font-weight:400;color:#6b7280;margin-right:1px}
+
+/* footer */
+.footer{text-align:center;margin-top:1.5rem;font-size:12px;color:#9ca3af;line-height:1.8}
+
+@media(max-width:480px){
+  body{padding:8px 0 40px}
+  .wrap{padding:0 10px 2rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hd">
+  <div class="hd-top">
+    <i class="ti ti-ball-football" aria-hidden="true"></i>
+    <span class="hd-title">2025暑假集训 · 毅搏足球</span>
+  </div>
+  <div class="hd-meta">
+    <span class="hd-item"><b>7月4日</b> 下午报到 — <b>7月17日</b> 中午离营</span>
+    <span class="hd-item">训练地点：<b>海门珂缔缘</b></span>
+    <span class="hd-item">住宿：<b>南通謇公湖国际大酒店</b></span>
+  </div>
+</div>
+
+<div class="sec-label">训练费 · 会员类型</div>
+<div class="sel-group" id="g-member">
+  <button class="sel-btn" id="mb-180" onclick="pickMember(180)">
+    <div style="font-size:16px;font-weight:500;margin-bottom:4px">180元/次</div>
+    <div style="font-size:13px">年费会员</div>
+  </button>
+  <button class="sel-btn" id="mb-230" onclick="pickMember(230)">
+    <div style="font-size:16px;font-weight:500;margin-bottom:4px">230元/次</div>
+    <div style="font-size:13px">非年费会员</div>
+  </button>
+</div>
+
+<div class="sec-label">其他选项</div>
+<div class="config-card">
+  <div>
+    <div class="config-block-label">住宿类型（早餐含在房费中，无需额外计算）</div>
+    <div class="sel-group" id="g-room" style="margin-bottom:0">
+      <button class="sel-btn" id="rm-200" onclick="pickRoom(200)">
+        <div style="font-size:16px;font-weight:500;margin-bottom:4px">200元/天</div>
+        <div style="font-size:13px">学员2人间</div>
+        <div style="font-size:11px;margin-top:3px;opacity:.85">含教练日常管理</div>
+      </button>
+      <button class="sel-btn" id="rm-280" onclick="pickRoom(280)">
+        <div style="font-size:16px;font-weight:500;margin-bottom:4px">280元/天</div>
+        <div style="font-size:13px">家长陪同</div>
+        <div style="font-size:11px;margin-top:3px;opacity:.85">独立房间</div>
+      </button>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="parent-meal-bar" onclick="toggleParentMeal()">
+    <div class="pm-left">
+      <i class="ti ti-users" aria-hidden="true"></i>
+      <div>
+        <div class="pm-text">家长与小朋友一起用餐</div>
+        <div class="pm-sub">开启后每餐额外 +40元，可在日历中单独调整</div>
+      </div>
+    </div>
+    <div class="tog" id="pm-tog"></div>
+  </div>
+</div>
+
+<div class="legend-row" id="legend-base">
+  <span class="leg"><span class="leg-dot" style="background:#185FA5"></span>上午训练</span>
+  <span class="leg"><span class="leg-dot" style="background:#3B6D11"></span>下午训练</span>
+  <span class="leg"><span class="leg-dot" style="background:#534AB7"></span>住宿</span>
+  <span class="leg"><span class="leg-dot" style="background:#BA7517"></span>午餐（孩子）</span>
+  <span class="leg"><span class="leg-dot" style="background:#993556"></span>晚餐（孩子）</span>
+</div>
+<div class="legend-row" id="legend-parent" style="display:none">
+  <span class="leg"><span class="leg-dot" style="background:#d4891a"></span>午餐（家长）</span>
+  <span class="leg"><span class="leg-dot" style="background:#c0456e"></span>晚餐（家长）</span>
+</div>
+
+<div class="cal-wrap">
+  <div class="cal-header" id="cal-header"></div>
+  <div id="cal-body"></div>
+</div>
+
+<div class="act-row">
+  <button class="act-btn" onclick="selectAll()">全选</button>
+  <button class="act-btn" onclick="clearAll()">清空</button>
+  <button class="act-btn" onclick="selectDefault()">恢复默认</button>
+</div>
+
+<div class="sec-label">费用明细</div>
+<div class="summary-card">
+  <div class="sum-sec" id="detail-list"></div>
+  <div class="sum-sec">
+    <div class="coach-row" onclick="toggleCoach()">
+      <div class="coach-left">
+        <div class="tog on" id="coach-tog"></div>
+        教练员日常吃住行平摊
+        <span style="font-size:11px">（全程固定 500元）</span>
+      </div>
+      <span class="coach-amt">¥<span id="coach-val">500</span></span>
+    </div>
+  </div>
+  <div class="total-bar">
+    <span class="total-label">预估总费用</span>
+    <span class="total-amt"><span class="cny">¥</span><span id="total-val">0</span></span>
+  </div>
+</div>
+
+<div class="footer">
+  上海毅搏足球俱乐部 · 费用以教练最终确认为准<br>
+  如有疑问请联系教练
+</div>
+
+</div>
+
+<script>
+const ACTIVE_STYLE = 'background:#185FA5;border:2px solid #185FA5;color:#ffffff';
+const INACTIVE_STYLE = 'background:#ffffff;border:1.5px solid #d1d5db;color:#374151';
+
+function setButtonState(btn, active) {
+  btn.style.cssText = active ? ACTIVE_STYLE : INACTIVE_STYLE;
+  btn.querySelectorAll('div').forEach(function(d) {
+    d.style.color = active ? '#ffffff' : '';
+    d.style.opacity = active ? '1' : '';
+  });
+  var badge = btn.querySelector('.chk-badge');
+  if (active) {
+    if (!badge) {
+      var b = document.createElement('span');
+      b.className = 'chk-badge';
+      b.textContent = '✓';
+      b.style.cssText = 'position:absolute;top:6px;right:8px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500';
+      btn.style.position = 'relative';
+      btn.appendChild(b);
+    }
+  } else {
+    if (badge) badge.remove();
+  }
+}
+
+var DAYS = [
+  {d:4,  wk:'周五', note:'下午报到',  amA:0,pmA:1,stayA:1,lA:0,dA:1},
+  {d:5,  wk:'周六', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:6,  wk:'周日', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:7,  wk:'周一', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:8,  wk:'周二', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:9,  wk:'周三', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:10, wk:'周四', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:11, wk:'周五', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:12, wk:'周六', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:13, wk:'周日', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:14, wk:'周一', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:15, wk:'周二', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:16, wk:'周三', amA:1,pmA:1,stayA:1,lA:1,dA:1},
+  {d:17, wk:'周四', note:'中午离营', amA:1,pmA:0,stayA:0,lA:1,dA:0},
+];
+var KCFG = [
+  {k:'am',     cls:'am',     avail:'amA',  label:'上午训练',   def:1},
+  {k:'pm',     cls:'pm',     avail:'pmA',  label:'下午训练',   def:1},
+  {k:'stay',   cls:'stay',   avail:'stayA',label:'住宿',       def:1},
+  {k:'lunch',  cls:'lunch',  avail:'lA',   label:'午餐(孩子)', def:1},
+  {k:'dinner', cls:'dinner', avail:'dA',   label:'晚餐(孩子)', def:1},
+  {k:'plunch', cls:'plunch', avail:'lA',   label:'午餐(家长)', def:0, parent:1},
+  {k:'pdinner',cls:'pdinner',avail:'dA',   label:'晚餐(家长)', def:0, parent:1},
+];
+var chk = {}, memberRate = 180, roomRate = 200, coachOn = true, parentMeal = false;
+
+function pickMember(rate) {
+  memberRate = rate;
+  setButtonState(document.getElementById('mb-180'), rate === 180);
+  setButtonState(document.getElementById('mb-230'), rate === 230);
+  calc();
+}
+function pickRoom(rate) {
+  roomRate = rate;
+  setButtonState(document.getElementById('rm-200'), rate === 200);
+  setButtonState(document.getElementById('rm-280'), rate === 280);
+  calc();
+}
+
+function initDefault() {
+  DAYS.forEach(function(day, i) {
+    KCFG.forEach(function(c) {
+      chk[i + '_' + c.k] = !!(day[c.avail] && c.def);
+    });
+  });
+}
+function getActiveCols() { return KCFG.filter(function(c){ return !c.parent || parentMeal; }); }
+function colSub(k) { return k==='am'?'9–11点':k==='pm'?'16–18点':k==='stay'?'住宿费':'40元/餐'; }
+function colTop(c) {
+  var base = c.label.replace('(孩子)','').replace('(家长)','');
+  var sub = c.label.indexOf('孩子')>-1 ? '<br><span style="font-size:9px;opacity:.8">孩子</span>' :
+            c.label.indexOf('家长')>-1 ? '<br><span style="font-size:9px;opacity:.8">家长</span>' : '';
+  return base + sub;
+}
+function buildHeader() {
+  var hdr = document.getElementById('cal-header');
+  var cols = getActiveCols();
+  hdr.style.gridTemplateColumns = '62px ' + cols.map(function(){ return '1fr'; }).join(' ');
+  hdr.innerHTML = '<div class="cal-hcell dc">日期</div>' +
+    cols.map(function(c){ return '<div class="cal-hcell">' + colTop(c) + '<br><span style="font-size:9px">' + colSub(c.k) + '</span></div>'; }).join('');
+}
+function buildCal() {
+  buildHeader();
+  var body = document.getElementById('cal-body');
+  body.innerHTML = '';
+  var cols = getActiveCols();
+  var gtc = '62px ' + cols.map(function(){ return '1fr'; }).join(' ');
+  DAYS.forEach(function(day, i) {
+    var wknd = day.wk === '周六' || day.wk === '周日';
+    var row = document.createElement('div');
+    row.className = 'cal-row' + (wknd ? ' wknd' : '');
+    row.style.gridTemplateColumns = gtc;
+    var dc = '<div class="date-cell"><div class="dn">7/' + day.d + '</div><div class="dw">' + day.wk + '</div>';
+    if (day.note) dc += '<div class="dnote">' + day.note + '</div>';
+    dc += '</div>';
+    row.innerHTML = dc;
+    cols.forEach(function(c) {
+      var avail = !!day[c.avail];
+      var cell = document.createElement('div');
+      cell.className = 'cc' + (avail ? '' : ' na');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.className = 'chk ' + c.cls + (avail ? '' : ' na');
+      cb.checked = chk[i + '_' + c.k];
+      if (!avail) cb.setAttribute('disabled', '');
+      cb.setAttribute('aria-label', '7月' + day.d + '日 ' + c.label);
+      (function(key){ cb.onchange = function(){ chk[key] = cb.checked; calc(); }; })(i + '_' + c.k);
+      cell.appendChild(cb);
+      row.appendChild(cell);
+    });
+    body.appendChild(row);
+  });
+}
+function syncBoxes() {
+  var rows = document.querySelectorAll('#cal-body .cal-row');
+  var cols = getActiveCols();
+  DAYS.forEach(function(_, i) {
+    var inputs = rows[i] ? rows[i].querySelectorAll('input[type=checkbox]') : [];
+    cols.forEach(function(c, ci) { if (inputs[ci]) inputs[ci].checked = chk[i + '_' + c.k]; });
+  });
+}
+function selectAll() {
+  var cols = getActiveCols();
+  DAYS.forEach(function(day, i){ cols.forEach(function(c){ if (day[c.avail]) chk[i+'_'+c.k] = true; }); });
+  syncBoxes(); calc();
+}
+function clearAll() {
+  KCFG.forEach(function(c){ DAYS.forEach(function(_, i){ chk[i+'_'+c.k] = false; }); });
+  syncBoxes(); calc();
+}
+function selectDefault() { initDefault(); syncBoxes(); calc(); }
+function toggleCoach() {
+  coachOn = !coachOn;
+  document.getElementById('coach-tog').className = 'tog' + (coachOn ? ' on' : '');
+  document.getElementById('coach-val').textContent = coachOn ? '500' : '0';
+  calc();
+}
+function toggleParentMeal() {
+  parentMeal = !parentMeal;
+  document.getElementById('pm-tog').className = 'tog' + (parentMeal ? ' on' : '');
+  document.getElementById('legend-parent').style.display = parentMeal ? '' : 'none';
+  if (parentMeal) DAYS.forEach(function(_, i){ chk[i+'_plunch'] = chk[i+'_lunch']; chk[i+'_pdinner'] = chk[i+'_dinner']; });
+  buildCal(); calc();
+}
+function summarizeDates(indices) {
+  if (!indices.length) return '未选择';
+  var ds = indices.map(function(i){ return DAYS[i].d; }).sort(function(a,b){ return a-b; });
+  var ranges = [], s = ds[0], e = ds[0];
+  for (var i = 1; i < ds.length; i++) {
+    if (ds[i] === e + 1) { e = ds[i]; }
+    else { ranges.push(s === e ? '7/'+s : '7/'+s+'–7/'+e); s = e = ds[i]; }
+  }
+  ranges.push(s === e ? '7/'+s : '7/'+s+'–7/'+e);
+  return ranges.join('、');
+}
+function isFullArr(sel, avKey) { return sel.length === DAYS.filter(function(d){ return d[avKey]; }).length; }
+function makeTag(f) { return f ? '<span class="detail-tag tag-full">全程参加</span>' : '<span class="detail-tag tag-partial">部分参加</span>'; }
+
+function calc() {
+  var amDays=[],pmDays=[],stayDays=[],lunchDays=[],dinnerDays=[],plunchDays=[],pdinnerDays=[];
+  DAYS.forEach(function(_, i){
+    if(chk[i+'_am'])    amDays.push(i);
+    if(chk[i+'_pm'])    pmDays.push(i);
+    if(chk[i+'_stay'])  stayDays.push(i);
+    if(chk[i+'_lunch']) lunchDays.push(i);
+    if(chk[i+'_dinner'])dinnerDays.push(i);
+    if(parentMeal&&chk[i+'_plunch'])  plunchDays.push(i);
+    if(parentMeal&&chk[i+'_pdinner']) pdinnerDays.push(i);
+  });
+  var sess    = amDays.length + pmDays.length;
+  var nights  = stayDays.length;
+  var lunches = lunchDays.length, dinners = dinnerDays.length;
+  var plunches= plunchDays.length, pdinners= pdinnerDays.length;
+  var trainFee = sess * memberRate;
+  var roomFee  = nights * roomRate;
+  var kidMeal  = (lunches + dinners) * 40;
+  var parentFee= (plunches + pdinners) * 40;
+  var coachFee = coachOn ? 500 : 0;
+  var total    = trainFee + roomFee + kidMeal + parentFee + coachFee;
+  document.getElementById('total-val').textContent = total.toLocaleString();
+
+  var fullSess  = isFullArr(amDays,'amA') && isFullArr(pmDays,'pmA');
+  var fullStay  = isFullArr(stayDays,'stayA');
+  var fullLunch = isFullArr(lunchDays,'lA');
+  var fullDinner= isFullArr(dinnerDays,'dA');
+
+  var trainDateStr = '';
+  if (!fullSess) {
+    var p = [];
+    if (amDays.length) p.push('上午 ' + summarizeDates(amDays));
+    if (pmDays.length) p.push('下午 ' + summarizeDates(pmDays));
+    trainDateStr = p.join('；') || '未选择';
+  }
+  var stayDateStr  = fullStay  ? '' : (nights  ? summarizeDates(stayDays)  + '（' + nights  + '晚）' : '未选择');
+  var lunchDateStr = fullLunch ? '' : (lunches  ? summarizeDates(lunchDays) + '（' + lunches + '次）' : '未选择');
+  var dinnerDateStr= fullDinner? '' : (dinners  ? summarizeDates(dinnerDays)+ '（' + dinners + '次）' : '未选择');
+
+  var rows = [
+    {title:'训练费',      tag:makeTag(fullSess),  dates:trainDateStr,  count:sess+'次 × '+memberRate+'元', fee:'¥'+trainFee.toLocaleString()},
+    {title:'住宿费',      tag:makeTag(fullStay),  dates:stayDateStr,   count:nights+'晚 × '+roomRate+'元', fee:'¥'+roomFee.toLocaleString()},
+    {title:'午餐（孩子）',tag:makeTag(fullLunch), dates:lunchDateStr,  count:lunches+'次 × 40元',          fee:'¥'+(lunches*40).toLocaleString()},
+    {title:'晚餐（孩子）',tag:makeTag(fullDinner),dates:dinnerDateStr, count:dinners+'次 × 40元',          fee:'¥'+(dinners*40).toLocaleString()},
+  ];
+  if (parentMeal) {
+    var fullPL = isFullArr(plunchDays,'lA'), fullPD = isFullArr(pdinnerDays,'dA');
+    rows.push({title:'午餐（家长）',tag:makeTag(fullPL),dates:fullPL?'':(plunches?summarizeDates(plunchDays)+'（'+plunches+'次）':'未选择'),count:plunches+'次 × 40元',fee:'¥'+(plunches*40).toLocaleString()});
+    rows.push({title:'晚餐（家长）',tag:makeTag(fullPD),dates:fullPD?'':(pdinners?summarizeDates(pdinnerDays)+'（'+pdinners+'次）':'未选择'),count:pdinners+'次 × 40元',fee:'¥'+(pdinners*40).toLocaleString()});
+  }
+  document.getElementById('detail-list').innerHTML = rows.map(function(r){
+    return '<div class="detail-row">' +
+      '<div class="detail-left"><div class="detail-title">' + r.title + '</div>' + r.tag +
+      (r.dates ? '<div class="detail-dates">' + r.dates + '</div>' : '') + '</div>' +
+      '<div class="detail-right"><div class="detail-count">' + r.count + '</div><div class="detail-fee">' + r.fee + '</div></div>' +
+      '</div>';
+  }).join('');
+}
+
+initDefault();
+buildCal();
+pickMember(180);
+pickRoom(200);
+calc();
+</script>
+</body>
+</html>
